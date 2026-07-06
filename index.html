@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>像素单词乐园 - Pixel Word Garden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f5e6d3;
+            --pixel-border: #3d2b1f;
+            --card-bg: #fffef9;
+            --shadow: #2c1a0e;
+            --accent-pink: #e8536c;
+            --accent-green: #4aab73;
+            --accent-blue: #4d8ecb;
+            --accent-yellow: #f0b440;
+            --accent-orange: #e8833a;
+            --accent-purple: #8b5fbf;
+            --accent-teal: #3daaa4;
+            --btn-hover: #fff3e0;
+            --text-dark: #2c1810;
+            --star-gold: #ffc107;
+            --success: #5cb85c;
+            --error: #e8536c;
+            --font-pixel: 'Press Start 2P', 'Courier New', monospace;
+            --font-main: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle, #e8d5c0 2px, transparent 2px),
+                radial-gradient(circle, #e8d5c0 2px, transparent 2px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            image-rendering: pixelated;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ========== 像素云朵装饰 ========== */
+        .pixel-clouds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        .pixel-cloud {
+            position: absolute;
+            background: #fff;
+            border-radius: 0;
+            animation: floatCloud 20s linear infinite;
+        }
+        .pixel-cloud::before,
+        .pixel-cloud::after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            border-radius: 0;
+        }
+        .pixel-cloud:nth-child(1) {
+            width: 80px;
+            height: 30px;
+            top: 8%;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        .pixel-cloud:nth-child(1)::before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 10px;
+        }
+        .pixel-cloud:nth-child(1)::after {
+            width: 50px;
+            height: 35px;
+            top: -12px;
+            left: 30px;
+        }
+        .pixel-cloud:nth-child(2) {
+            width: 60px;
+            height: 24px;
+            top: 20%;
+            left: -80px;
+            animation-delay: 7s;
+            animation-duration: 25s;
+        }
+        .pixel-cloud:nth-child(2)::before {
+            width: 30px;
+            height: 30px;
+            top: -16px;
+            left: 8px;
+        }
+        .pixel-cloud:nth-child(2)::after {
+            width: 38px;
+            height: 26px;
+            top: -10px;
+            left: 22px;
+        }
+        .pixel-cloud:nth-child(3) {
+            width: 70px;
+            height: 28px;
+            top: 35%;
+            left: -120px;
+            animation-delay: 14s;
+            animation-duration: 22s;
+        }
+        .pixel-cloud:nth-child(3)::before {
+            width: 35px;
+            height: 35px;
+            top: -18px;
+            left: 12px;
+        }
+        .pixel-cloud:nth-child(3)::after {
+            width: 44px;
+            height: 30px;
+            top: -10px;
+            left: 28px;
+        }
+
+        @keyframes floatCloud {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(calc(100vw + 200px));
+            }
+        }
+
+        /* ========== 主容器 ========== */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            width: 100%;
+            background: #fffef9;
+            border: 6px solid var(--pixel-border);
+            border-radius: 0;
+            box-shadow:
+                8px 8px 0 0 var(--shadow),
+                12px 12px 0 0 rgba(44, 26, 14, 0.3),
+                inset 0 0 0 3px #faf3e6;
+            padding: 20px 16px 24px;
+            margin: 10px 0 30px;
+            image-rendering: auto;
+        }
+
+        /* ========== 头部标题 ========== */
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .header .title-pixel {
+            font-family: var(--font-pixel);
+            font-size: clamp(14px, 3vw, 20px);
+            color: #3d2b1f;
+            letter-spacing: 2px;
+            line-height: 1.6;
+            text-shadow: 3px 3px 0 #f0b440, 5px 5px 0 rgba(61, 43, 31, 0.2);
+            margin: 0;
+            padding: 8px 0;
+            background: linear-gradient(180deg, transparent 60%, #ffe0b0 60%);
+            display: inline-block;
+        }
+        .header .subtitle {
+            font-family: var(--font-pixel);
+            font-size: 9px;
+            color: #8b6f5e;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+        .star-decoration {
+            display: inline-block;
+            font-size: 18px;
+            animation: starTwinkle 1.5s steps(2) infinite;
+            vertical-align: middle;
+        }
+        @keyframes starTwinkle {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.7);
+            }
+        }
+
+        /* ========== 模式切换 ========== */
+        .mode-toggle-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            font-family: var(--font-pixel);
+            font-size: 10px;
+            padding: 10px 16px;
+            border: 4px solid var(--pixel-border);
+            background: #e8d5c0;
+            color: #3d2b1f;
+            cursor: pointer;
+            border-radius: 0;
+            letter-spacing: 1px;
+            transition: all 0.1s steps(2);
+            position: relative;
+            box-shadow: 3px 3px 0 0 #b89a7a;
+            white-space: nowrap;
+        }
+        .mode-btn:hover {
+            background: #fce4c8;
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 0 #b89a7a;
+        }
+        .mode-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 0 #b89a7a;
+        }
+        .mode-btn.active {
+            background: #f0b440;
+            border-color: #3d2b1f;
+            box-shadow: 3px 3px 0 0 #8b5a2b;
+            color: #1a0a00;
+            animation: btnPulse 2s steps(3) infinite;
+        }
+        @keyframes btnPulse {
+            0%,
+            100% {
+                border-color: #3d2b1f;
+            }
+            50% {
+                border-color: #e8536c;
+            }
+        }
+
+        /* ========== 场景导航 ========== */
+        .scene-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 18px;
+            padding: 4px 0;
+        }
+        .scene-tab {
+            font-family: var(--font-pixel);
+            font-size: 9px;
+            padding: 8px 12px;
+            border: 3px solid var(--pixel-border);
+            background: #fff;
+            cursor: pointer;
+            border-radius: 0;
+            letter-spacing: 0.5px;
+            transition: all 0.1s steps(2);
+            box-shadow: 2px 2px 0 0 #c4a88c;
+            position: relative;
+            color: #3d2b1f;
+            white-space: nowrap;
+        }
+        .scene-tab:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 0 #c4a88c;
+        }
+        .scene-tab:active {
+            transform: translate(1px, 1px);
+            box-shadow: 0px 0px 0 0 #c4a88c;
+        }
+        .scene-tab.active {
+            background: #4aab73;
+            color: #fff;
+            border-color: #2c5a3e;
+            box-shadow: 3px 3px 0 0 #2c5a3e;
+            text-shadow: 1px 1px 0 #1a3a20;
+        }
+        .scene-tab .tab-emoji {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* ========== 卡片网格 ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            padding: 4px;
+            min-height: 200px;
+            align-content: start;
+        }
+        @media (max-width: 600px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+                gap: 8px;
+            }
+            .main-container {
+                padding: 12px 8px 16px;
+                border-width: 4px;
+                box-shadow: 5px 5px 0 0 var(--shadow), 8px 8px 0 0 rgba(44, 26, 14, 0.25);
+            }
+        }
+
+        /* ========== 单词卡片 ========== */
+        .word-card {
+            background: var(--card-bg);
+            border: 4px solid #5c4a3a;
+            border-radius: 0;
+            padding: 10px 6px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.1s steps(3);
+            box-shadow: 4px 4px 0 0 #b8a088;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-height: 140px;
+            justify-content: center;
+        }
+        .word-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0 0 #b8a088;
+            border-color: #3d2b1f;
+            background: #fffef5;
+        }
+        .word-card:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 0 #b8a088;
+        }
+        .word-card.correct-flash {
+            animation: correctBounce 0.5s steps(4);
+            border-color: #5cb85c !important;
+            box-shadow: 4px 4px 0 0 #3a7a3a !important;
+            background: #e8f8e0 !important;
+        }
+        .word-card.wrong-flash {
+            animation: wrongShake 0.4s steps(3);
+            border-color: #e8536c !important;
+            box-shadow: 4px 4px 0 0 #9a2030 !important;
+            background: #ffe8ec !important;
+        }
+        @keyframes correctBounce {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.12);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            75% {
+                transform: scale(1.05);
+            }
+        }
+        @keyframes wrongShake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-8px);
+            }
+            50% {
+                transform: translateX(8px);
+            }
+            75% {
+                transform: translateX(-4px);
+            }
+        }
+        .word-card .pixel-icon-wrap {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .word-card canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            border-radius: 0;
+            width: 72px;
+            height: 72px;
+            display: block;
+        }
+        .word-card .word-label {
+            font-family: var(--font-pixel);
+            font-size: 9px;
+            color: #3d2b1f;
+            letter-spacing: 1px;
+            word-break: break-all;
+            line-height: 1.4;
+            text-transform: uppercase;
+            background: #fffbe6;
+            padding: 4px 8px;
+            border: 2px solid #ddd0b8;
+            border-radius: 0;
+            transition: all 0.1s;
+        }
+        .word-card:hover .word-label {
+            background: #fff3c8;
+            border-color: #c4a860;
+        }
+        .speaker-hint {
+            position: absolute;
+            top: 2px;
+            right: 6px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.15s;
+            pointer-events: none;
+        }
+        .word-card:hover .speaker-hint {
+            opacity: 0.8;
+        }
+        .word-card .star-badge {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            font-size: 20px;
+            animation: starPop 0.6s steps(3);
+            pointer-events: none;
+            z-index: 2;
+        }
+        @keyframes starPop {
+            0% {
+                transform: scale(0) rotate(-30deg);
+                opacity: 1;
+            }
+            60% {
+                transform: scale(1.5) rotate(10deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* ========== 测验选项按钮 ========== */
+        .quiz-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+            width: 100%;
+        }
+        .quiz-option-btn {
+            font-family: var(--font-pixel);
+            font-size: 9px;
+            padding: 8px 14px;
+            border: 3px solid #5c4a3a;
+            background: #fffef9;
+            cursor: pointer;
+            border-radius: 0;
+            letter-spacing: 1px;
+            box-shadow: 3px 3px 0 0 #b8a088;
+            transition: all 0.1s;
+            color: #3d2b1f;
+            min-width: 70px;
+            text-transform: uppercase;
+        }
+        .quiz-option-btn:hover {
+            background: #fff3c8;
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0 0 #b8a088;
+        }
+        .quiz-option-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 0 #b8a088;
+        }
+        .quiz-option-btn.correct-pick {
+            background: #5cb85c !important;
+            color: #fff !important;
+            border-color: #3a7a3a !important;
+            box-shadow: 3px 3px 0 0 #2a5a2a !important;
+        }
+        .quiz-option-btn.wrong-pick {
+            background: #e8536c !important;
+            color: #fff !important;
+            border-color: #9a2030 !important;
+            box-shadow: 3px 3px 0 0 #6a1020 !important;
+        }
+
+        /* ========== 得分栏 ========== */
+        .score-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding: 10px;
+            background: #fffbe6;
+            border: 3px solid #ddd0b8;
+            flex-wrap: wrap;
+            font-family: var(--font-pixel);
+            font-size: 10px;
+            color: #3d2b1f;
+            letter-spacing: 1px;
+        }
+        .score-stars {
+            font-size: 20px;
+            letter-spacing: 2px;
+            display: flex;
+            gap: 2px;
+        }
+        .score-stars .star-filled {
+            color: #ffc107;
+            text-shadow: 1px 1px 0 #b8860b;
+        }
+        .score-stars .star-empty {
+            color: #ddd;
+            text-shadow: 1px 1px 0 #bbb;
+        }
+        .reset-btn {
+            font-family: var(--font-pixel);
+            font-size: 8px;
+            padding: 6px 10px;
+            border: 2px solid #5c4a3a;
+            background: #fce4c8;
+            cursor: pointer;
+            border-radius: 0;
+            box-shadow: 2px 2px 0 0 #b8a088;
+            color: #3d2b1f;
+            letter-spacing: 0.5px;
+            transition: all 0.1s;
+        }
+        .reset-btn:hover {
+            background: #ffe8d0;
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 0 #b8a088;
+        }
+        .reset-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 0px 0px 0 0 #b8a088;
+        }
+
+        /* ========== 提示消息 ========== */
+        .message-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            font-family: var(--font-pixel);
+            font-size: 11px;
+            padding: 12px 20px;
+            background: #3d2b1f;
+            color: #ffe0b0;
+            border: 3px solid #ffe0b0;
+            box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+            animation: toastDrop 0.3s steps(4), toastFade 0.3s 1.5s forwards;
+            pointer-events: none;
+            text-align: center;
+            max-width: 90vw;
+        }
+        @keyframes toastDrop {
+            from {
+                transform: translateX(-50%) translateY(-60px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes toastFade {
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+        }
+
+        /* ========== 页脚 ========== */
+        .footer-note {
+            font-family: var(--font-pixel);
+            font-size: 7px;
+            color: #b8a088;
+            text-align: center;
+            margin-top: 8px;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .footer-note a {
+            color: #6b4f3a;
+            text-decoration: none;
+            border-bottom: 2px dotted #c4a88c;
+        }
+        .footer-note a:hover {
+            color: #3d2b1f;
+            border-bottom-color: #3d2b1f;
+        }
+
+        /* ========== 隐藏类 ========== */
+        .hidden {
+            display: none !important;
+        }
+        .disabled-card {
+            pointer-events: none;
+            opacity: 0.6;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 像素云朵背景 -->
+    <div class="pixel-clouds">
+        <div class="pixel-cloud"></div>
+        <div class="pixel-cloud"></div>
+        <div class="pixel-cloud"></div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container" id="mainContainer">
+        <!-- 标题 -->
+        <div class="header">
+            <span class="star-decoration">⭐</span>
+            <span class="title-pixel">像素单词乐园</span>
+            <span class="star-decoration">⭐</span>
+            <div class="subtitle">PIXEL WORD GARDEN · 点一点学单词</div>
+        </div>
+
+        <!-- 模式切换 -->
+        <div class="mode-toggle-wrap">
+            <button class="mode-btn active" data-mode="learn" id="btnLearn">📖 学习模式</button>
+            <button class="mode-btn" data-mode="quiz" id="btnQuiz">🎮 测验挑战</button>
+        </div>
+
+        <!-- 场景导航 -->
+        <div class="scene-nav" id="sceneNav">
+            <!-- JS动态生成 -->
+        </div>
+
+        <!-- 卡片区域 -->
+        <div class="cards-grid" id="cardsGrid">
+            <!-- JS动态生成 -->
+        </div>
+
+        <!-- 测验选项区 -->
+        <div class="quiz-options hidden" id="quizOptions"></div>
+
+        <!-- 得分栏 -->
+        <div class="score-bar">
+            <span>🏆 星星:</span>
+            <span class="score-stars" id="scoreStars">
+                <span class="star-empty">☆</span>
+                <span class="star-empty">☆</span>
+                <span class="star-empty">☆</span>
+                <span class="star-empty">☆</span>
+                <span class="star-empty">☆</span>
+            </span>
+            <span id="scoreText">0 / 5</span>
+            <button class="reset-btn" id="btnReset">🔄 重置</button>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        🎨 像素风格 · 适合小朋友学单词 · 点击卡片听发音 🔊<br>
+        部署在 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> 上即可分享给朋友
+    </div>
+
+    <!-- 消息提示容器 -->
+    <div id="toastContainer"></div>
+
+    <script>
+        (function() {
+            // ==================== 场景与单词数据 ====================
+            const scenes = [{
+                id: 'supermarket',
+                name: '超市',
+                emoji: '🛒',
+                color: '#e8833a',
+                words: [
+                    { en: 'APPLE', zh: '苹果', iconColor: '#e74c3c', iconType: 'apple' },
+                    { en: 'BREAD', zh: '面包', iconColor: '#f0b440', iconType: 'bread' },
+                    { en: 'MILK', zh: '牛奶', iconColor: '#f8f8f8', iconType: 'milk' },
+                    { en: 'EGG', zh: '鸡蛋', iconColor: '#fef3e0', iconType: 'egg' },
+                    { en: 'CHEESE', zh: '奶酪', iconColor: '#f9d54c', iconType: 'cheese' },
+                    { en: 'JUICE', zh: '果汁', iconColor: '#f8973c', iconType: 'juice' },
+                    { en: 'CANDY', zh: '糖果', iconColor: '#e8538c', iconType: 'candy' },
+                    { en: 'FISH', zh: '鱼', iconColor: '#6db3d8', iconType: 'fish' },
+                ],
+            }, {
+                id: 'hospital',
+                name: '医院',
+                emoji: '🏥',
+                color: '#4d8ecb',
+                words: [
+                    { en: 'DOCTOR', zh: '医生', iconColor: '#5dade2', iconType: 'doctor' },
+                    { en: 'NURSE', zh: '护士', iconColor: '#f5b7b1', iconType: 'nurse' },
+                    { en: 'PILL', zh: '药丸', iconColor: '#e74c3c', iconType: 'pill' },
+                    { en: 'BANDAGE', zh: '绷带', iconColor: '#fef9f0', iconType: 'bandage' },
+                    { en: 'BED', zh: '病床', iconColor: '#e8e8e8', iconType: 'bed_hosp' },
+                    { en: 'SYRINGE', zh: '注射器', iconColor: '#b0d4f1', iconType: 'syringe' },
+                    { en: 'HEART', zh: '心脏', iconColor: '#e8536c', iconType: 'heart' },
+                    { en: 'THERMOMETER', zh: '温度计', iconColor: '#fefefe', iconType: 'thermometer' },
+                ],
+            }, {
+                id: 'school',
+                name: '学校',
+                emoji: '🏫',
+                color: '#f0b440',
+                words: [
+                    { en: 'BOOK', zh: '书', iconColor: '#5d9cec', iconType: 'book' },
+                    { en: 'PEN', zh: '钢笔', iconColor: '#3d5a80', iconType: 'pen' },
+                    { en: 'PENCIL', zh: '铅笔', iconColor: '#f0b440', iconType: 'pencil' },
+                    { en: 'RULER', zh: '尺子', iconColor: '#f8c471', iconType: 'ruler' },
+                    { en: 'ERASER', zh: '橡皮', iconColor: '#f5b7b1', iconType: 'eraser' },
+                    { en: 'BAG', zh: '书包', iconColor: '#e8833a', iconType: 'bag' },
+                    { en: 'DESK', zh: '课桌', iconColor: '#c89b6e', iconType: 'desk' },
+                    { en: 'GLOBE', zh: '地球仪', iconColor: '#4dabcb', iconType: 'globe' },
+                ],
+            }, {
+                id: 'park',
+                name: '公园',
+                emoji: '🌳',
+                color: '#4aab73',
+                words: [
+                    { en: 'TREE', zh: '树', iconColor: '#5a9e4b', iconType: 'tree' },
+                    { en: 'FLOWER', zh: '花', iconColor: '#e8538c', iconType: 'flower' },
+                    { en: 'BIRD', zh: '鸟', iconColor: '#e8536c', iconType: 'bird' },
+                    { en: 'KITE', zh: '风筝', iconColor: '#e8833a', iconType: 'kite' },
+                    { en: 'BALL', zh: '球', iconColor: '#f0b440', iconType: 'ball' },
+                    { en: 'SWING', zh: '秋千', iconColor: '#c89b6e', iconType: 'swing' },
+                    { en: 'BENCH', zh: '长椅', iconColor: '#8b6f5e', iconType: 'bench' },
+                    { en: 'BUTTERFLY', zh: '蝴蝶', iconColor: '#e8a0d0', iconType: 'butterfly' },
+                ],
+            }, {
+                id: 'home',
+                name: '家',
+                emoji: '🏠',
+                color: '#e8536c',
+                words: [
+                    { en: 'BED', zh: '床', iconColor: '#d5b8e8', iconType: 'bed_home' },
+                    { en: 'TABLE', zh: '桌子', iconColor: '#c89b6e', iconType: 'table' },
+                    { en: 'CHAIR', zh: '椅子', iconColor: '#a08060', iconType: 'chair' },
+                    { en: 'LAMP', zh: '台灯', iconColor: '#f0d040', iconType: 'lamp' },
+                    { en: 'CLOCK', zh: '时钟', iconColor: '#fefefe', iconType: 'clock' },
+                    { en: 'DOOR', zh: '门', iconColor: '#8b5e3c', iconType: 'door' },
+                    { en: 'SOFA', zh: '沙发', iconColor: '#e8a060', iconType: 'sofa' },
+                    { en: 'PHONE', zh: '电话', iconColor: '#5dade2', iconType: 'phone' },
+                ],
+            }, ];
+
+            // ==================== 状态管理 ====================
+            let currentSceneId = 'supermarket';
+            let currentMode = 'learn'; // 'learn' | 'quiz'
+            let score = 0;
+            const maxScore = 5;
+            let quizTarget = null; // 当前测验的目标单词
+            let quizOptionsList = []; // 测验选项
+            let isQuizLocked = false;
+
+            // ==================== DOM引用 ====================
+            const sceneNav = document.getElementById('sceneNav');
+            const cardsGrid = document.getElementById('cardsGrid');
+            const quizOptionsDiv = document.getElementById('quizOptions');
+            const scoreStars = document.getElementById('scoreStars');
+            const scoreText = document.getElementById('scoreText');
+            const btnLearn = document.getElementById('btnLearn');
+            const btnQuiz = document.getElementById('btnQuiz');
+            const btnReset = document.getElementById('btnReset');
+            const toastContainer = document.getElementById('toastContainer');
+
+            // ==================== 工具函数 ====================
+            function getCurrentScene() {
+                return scenes.find(s => s.id === currentSceneId) || scenes[0];
+            }
+
+            function showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'message-toast';
+                toast.textContent = message;
+                toastContainer.appendChild(toast);
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                }, 2000);
+            }
+
+            function updateScoreDisplay() {
+                const starsHtml = [];
+                for (let i = 0; i < maxScore; i++) {
+                    if (i < score) {
+                        starsHtml.push('<span class="star-filled">★</span>');
+                    } else {
+                        starsHtml.push('<span class="star-empty">☆</span>');
+                    }
+                }
+                scoreStars.innerHTML = starsHtml.join('');
+                scoreText.textContent = `${score} / ${maxScore}`;
+            }
+
+            function addScore() {
+                if (score < maxScore) {
+                    score++;
+                    updateScoreDisplay();
+                    if (score >= maxScore) {
+                        showToast('🎉 太棒了！集齐了所有星星！🌟');
+                    }
+                }
+            }
+
+            function resetScore() {
+                score = 0;
+                updateScoreDisplay();
+                showToast('🔄 星星已重置，继续加油！');
+            }
+
+            // ==================== 像素图标绘制 (Canvas 32×32) ====================
+            function drawPixelIcon(canvas, iconType, mainColor) {
+                const ctx = canvas.getContext('2d');
+                const size = 32;
+                canvas.width = size;
+                canvas.height = size;
+                ctx.clearRect(0, 0, size, size);
+
+                // 辅助函数：绘制像素块
+                function fillRect(x, y, w, h, color) {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+                }
+
+                function drawCirclePixels(cx, cy, r, color) {
+                    ctx.fillStyle = color;
+                    for (let py = Math.max(0, cy - r); py <= Math.min(size - 1, cy + r); py++) {
+                        for (let px = Math.max(0, cx - r); px <= Math.min(size - 1, cx + r); px++) {
+                            const dx = px - cx;
+                            const dy = py - cy;
+                            if (dx * dx + dy * dy <= r * r + 1) {
+                                ctx.fillRect(px, py, 1, 1);
+                            }
+                        }
+                    }
+                }
+
+                // 解析主色
+                const c = mainColor;
+
+                switch (iconType) {
+                    case 'apple':
+                        // 红色苹果
+                        drawCirclePixels(16, 18, 10, '#d63031');
+                        drawCirclePixels(13, 14, 5, '#e74c3c');
+                        drawCirclePixels(19, 14, 5, '#e74c3c');
+                        fillRect(15, 5, 3, 6, '#6b4226'); // 柄
+                        fillRect(11, 8, 4, 4, '#5a9e4b'); // 叶子
+                        fillRect(18, 20, 4, 2, '#fffef9'); // 高光
+                        break;
+
+                    case 'bread':
+                        fillRect(4, 10, 24, 16, '#e8a840');
+                        fillRect(3, 9, 26, 4, '#d49430');
+                        fillRect(5, 8, 22, 3, '#c48428');
+                        fillRect(7, 6, 18, 3, '#b87820');
+                        fillRect(10, 18, 4, 4, '#f5d090'); // 高光
+                        break;
+
+                    case 'milk':
+                        fillRect(8, 6, 16, 22, '#fefefe');
+                        fillRect(7, 4, 18, 5, '#4d8ecb');
+                        fillRect(10, 2, 12, 4, '#e8e8e8'); // 顶部
+                        fillRect(11, 10, 6, 8, '#e8f0f8'); // 标签
+                        fillRect(12, 12, 4, 4, '#4d8ecb'); // 标签文字模拟
+                        break;
+
+                    case 'egg':
+                        drawCirclePixels(16, 17, 9, '#fef9f0');
+                        drawCirclePixels(14, 15, 5, '#fffef9');
+                        fillRect(13, 20, 6, 3, '#f0e0c8'); // 阴影
+                        fillRect(15, 13, 3, 2, '#fffef9'); // 高光
+                        break;
+
+                    case 'cheese':
+                        fillRect(4, 8, 24, 18, '#f9d54c');
+                        fillRect(5, 7, 22, 3, '#e8c030');
+                        // 孔洞
+                        fillRect(10, 13, 5, 5, '#e8b820');
+                        fillRect(20, 16, 4, 4, '#e8b820');
+                        fillRect(7, 19, 3, 3, '#e8b820');
+                        fillRect(22, 10, 3, 3, '#e8b820');
+                        break;
+
+                    case 'juice':
+                        fillRect(8, 8, 16, 20, '#f8973c');
+                        fillRect(6, 5, 20, 6, '#e8833a');
+                        fillRect(12, 2, 8, 5, '#e8e8e8'); // 吸管
+                        fillRect(10, 12, 8, 8, '#ffe0b0'); // 标签
+                        fillRect(12, 14, 4, 4, '#f8973c');
+                        break;
+
+                    case 'candy':
+                        fillRect(4, 12, 24, 10, '#e8538c');
+                        fillRect(3, 14, 26, 6, '#f070a0');
+                        fillRect(6, 10, 20, 4, '#fefefe'); // 糖纸褶皱
+                        fillRect(7, 20, 18, 4, '#fefefe');
+                        fillRect(2, 13, 4, 8, '#fefefe'); // 糖纸两端
+                        fillRect(26, 13, 4, 8, '#fefefe');
+                        break;
+
+                    case 'fish':
+                        drawCirclePixels(12, 16, 9, '#6db3d8');
+                        fillRect(18, 10, 10, 12, '#5dade2');
+                        fillRect(24, 12, 6, 8, '#4d9ec0');
+                        fillRect(26, 14, 4, 4, '#3d8eae');
+                        fillRect(5, 14, 4, 3, '#4d9ec0'); // 尾
+                        fillRect(2, 13, 4, 5, '#3d8eae');
+                        fillRect(8, 16, 3, 3, '#fff'); // 眼
+                        break;
+
+                    case 'doctor':
+                        fillRect(10, 2, 12, 10, '#f5d5b8'); // 脸
+                        fillRect(8, 10, 16, 16, '#5dade2'); // 白大褂
+                        fillRect(6, 8, 4, 20, '#4d8ecb');
+                        fillRect(22, 8, 4, 20, '#4d8ecb');
+                        fillRect(14, 5, 4, 4, '#6b4226'); // 头发
+                        fillRect(10, 14, 4, 4, '#fefefe'); // 纽扣
+                        fillRect(18, 14, 4, 4, '#fefefe');
+                        break;
+
+                    case 'nurse':
+                        fillRect(10, 2, 12, 10, '#f5d5b8');
+                        fillRect(8, 10, 16, 16, '#f5b7b1');
+                        fillRect(6, 6, 20, 4, '#fefefe'); // 帽子
+                        fillRect(12, 3, 8, 5, '#fefefe');
+                        fillRect(14, 15, 4, 4, '#fefefe');
+                        fillRect(10, 1, 3, 4, '#e8536c'); // 十字
+                        fillRect(19, 3, 3, 4, '#e8536c');
+                        break;
+
+                    case 'pill':
+                        fillRect(6, 10, 10, 14, '#e74c3c');
+                        fillRect(16, 10, 10, 14, '#fefefe');
+                        fillRect(5, 9, 22, 4, '#d63031');
+                        fillRect(5, 20, 22, 4, '#d63031');
+                        fillRect(14, 12, 4, 10, '#e8e8e8'); // 分割线
+                        break;
+
+                    case 'bandage':
+                        fillRect(6, 8, 20, 16, '#fef9f0');
+                        fillRect(8, 7, 16, 18, '#fdf5e6');
+                        fillRect(10, 6, 12, 20, '#fef9f0');
+                        fillRect(13, 10, 6, 12, '#f0e0d0'); // 垫片
+                        fillRect(16, 12, 3, 8, '#e8d0b8');
+                        break;
+
+                    case 'bed_hosp':
+                        fillRect(4, 16, 24, 10, '#e8e8e8');
+                        fillRect(3, 14, 26, 4, '#d0d0d0');
+                        fillRect(6, 8, 20, 8, '#fefefe'); // 枕头
+                        fillRect(8, 10, 16, 5, '#f8f8f8');
+                        fillRect(2, 22, 4, 8, '#a0a0a0'); // 床腿
+                        fillRect(26, 22, 4, 8, '#a0a0a0');
+                        break;
+
+                    case 'syringe':
+                        fillRect(14, 4, 4, 16, '#b0d4f1');
+                        fillRect(13, 2, 6, 4, '#e8e8e8');
+                        fillRect(11, 18, 10, 6, '#fefefe'); // 筒
+                        fillRect(10, 16, 12, 4, '#d0d0d0');
+                        fillRect(15, 3, 2, 10, '#fefefe'); // 液体
+                        fillRect(8, 20, 4, 4, '#e8536c'); // 推杆
+                        break;
+
+                    case 'heart':
+                        fillRect(8, 6, 8, 8, '#e8536c');
+                        fillRect(16, 6, 8, 8, '#e8536c');
+                        fillRect(4, 10, 24, 6, '#e8536c');
+                        fillRect(6, 8, 20, 6, '#f07080');
+                        fillRect(6, 14, 20, 8, '#d63040');
+                        fillRect(8, 16, 16, 6, '#e8536c');
+                        fillRect(10, 18, 12, 6, '#d63040');
+                        fillRect(12, 20, 8, 4, '#c02030');
+                        // 高光
+                        fillRect(8, 8, 4, 4, '#faa0b0');
+                        break;
+
+                    case 'thermometer':
+                        fillRect(14, 2, 4, 24, '#fefefe');
+                        fillRect(13, 1, 6, 3, '#e8e8e8');
+                        fillRect(12, 20, 8, 10, '#e74c3c'); // 球部
+                        fillRect(13, 18, 6, 4, '#e74c3c');
+                        fillRect(15, 6, 2, 14, '#e8536c'); // 液柱
+                        break;
+
+                    case 'book':
+                        fillRect(6, 4, 10, 24, '#5d9cec');
+                        fillRect(16, 4, 10, 24, '#4d8ecb');
+                        fillRect(14, 4, 4, 24, '#3d7eb0'); // 书脊
+                        fillRect(8, 8, 6, 2, '#fefefe');
+                        fillRect(18, 8, 6, 2, '#fefefe');
+                        fillRect(8, 14, 6, 2, '#fefefe');
+                        fillRect(18, 14, 6, 2, '#fefefe');
+                        fillRect(8, 20, 6, 2, '#fefefe');
+                        fillRect(18, 20, 6, 2, '#fefefe');
+                        break;
+
+                    case 'pen':
+                        fillRect(14, 2, 4, 22, '#3d5a80');
+                        fillRect(13, 1, 6, 3, '#2c4a6e');
+                        fillRect(15, 3, 2, 18, '#4d7ab0');
+                        fillRect(12, 20, 8, 5, '#f0b440'); // 笔尖
+                        fillRect(13, 18, 6, 4, '#e8a030');
+                        break;
+
+                    case 'pencil':
+                        fillRect(14, 2, 4, 18, '#f0b440');
+                        fillRect(13, 1, 6, 3, '#e8a030');
+                        fillRect(15, 4, 2, 14, '#f8c870');
+                        fillRect(12, 16, 8, 6, '#f5b7b1'); // 橡皮
+                        fillRect(11, 18, 10, 3, '#e8a0a0');
+                        fillRect(13, 22, 6, 3, '#3d3d3d'); // 笔尖
+                        break;
+
+                    case 'ruler':
+                        fillRect(4, 10, 24, 8, '#f8c471');
+                        fillRect(3, 9, 26, 10, '#f0b440');
+                        fillRect(5, 12, 3, 4, '#3d3d3d'); // 刻度
+                        fillRect(11, 12, 3, 4, '#3d3d3d');
+                        fillRect(17, 12, 3, 4, '#3d3d3d');
+                        fillRect(23, 12, 3, 4, '#3d3d3d');
+                        break;
+
+                    case 'eraser':
+                        fillRect(6, 8, 20, 14, '#f5b7b1');
+                        fillRect(5, 7, 22, 16, '#f0a8a0');
+                        fillRect(7, 6, 18, 4, '#e8d8d0'); // 包装纸
+                        fillRect(8, 5, 16, 3, '#fefefe');
+                        fillRect(10, 12, 4, 4, '#fef9f9'); // 高光
+                        break;
+
+                    case 'bag':
+                        fillRect(6, 8, 20, 20, '#e8833a');
+                        fillRect(5, 6, 22, 5, '#d07030');
+                        fillRect(10, 4, 12, 4, '#c06028'); // 提手
+                        fillRect(8, 6, 4, 22, '#d07030'); // 侧面
+                        fillRect(12, 14, 8, 6, '#fefefe'); // 口袋
+                        break;
+
+                    case 'desk':
+                        fillRect(3, 14, 26, 6, '#c89b6e');
+                        fillRect(2, 12, 28, 4, '#b8885c');
+                        fillRect(6, 20, 4, 10, '#a07050'); // 桌腿
+                        fillRect(22, 20, 4, 10, '#a07050');
+                        fillRect(10, 16, 12, 2, '#d8b890'); // 高光
+                        break;
+
+                    case 'globe':
+                        drawCirclePixels(16, 14, 10, '#4dabcb');
+                        fillRect(13, 2, 6, 24, '#c89b6e'); // 轴
+                        fillRect(12, 1, 8, 4, '#b8885c');
+                        fillRect(12, 24, 8, 4, '#b8885c'); // 底座
+                        fillRect(10, 22, 12, 4, '#a07050');
+                        fillRect(14, 10, 4, 8, '#3daa90'); // 大陆
+                        fillRect(10, 16, 6, 3, '#3daa90');
+                        break;
+
+                    case 'tree':
+                        fillRect(12, 16, 8, 14, '#8b5e3c'); // 树干
+                        fillRect(11, 15, 10, 4, '#6b4226');
+                        drawCirclePixels(16, 10, 12, '#5a9e4b');
+                        drawCirclePixels(10, 12, 8, '#4a8e3b');
+                        drawCirclePixels(22, 11, 8, '#4a8e3b');
+                        drawCirclePixels(16, 6, 8, '#6aae5b');
+                        break;
+
+                    case 'flower':
+                        fillRect(14, 18, 4, 12, '#5a9e4b'); // 茎
+                        fillRect(13, 8, 6, 12, '#4a8e3b');
+                        // 花瓣
+                        fillRect(8, 4, 8, 8, '#e8538c');
+                        fillRect(16, 4, 8, 8, '#f070a0');
+                        fillRect(8, 12, 8, 8, '#f070a0');
+                        fillRect(16, 12, 8, 8, '#e8538c');
+                        fillRect(12, 8, 8, 8, '#ffd040'); // 花心
+                        break;
+
+                    case 'bird':
+                        drawCirclePixels(16, 14, 8, '#e8536c');
+                        fillRect(10, 10, 8, 6, '#d04050');
+                        fillRect(4, 12, 8, 4, '#e8536c'); // 翅膀
+                        fillRect(18, 12, 8, 4, '#e8536c');
+                        fillRect(22, 15, 5, 3, '#f0b440'); // 喙
+                        fillRect(8, 16, 4, 2, '#3d3d3d'); // 眼
+                        break;
+
+                    case 'kite':
+                        fillRect(10, 4, 12, 20, '#e8833a');
+                        fillRect(6, 8, 20, 12, '#f0a050');
+                        fillRect(14, 2, 4, 6, '#c06028');
+                        fillRect(8, 10, 16, 2, '#fefefe'); // 骨架
+                        fillRect(14, 6, 4, 18, '#fefefe');
+                        fillRect(16, 20, 2, 10, '#e8e8e8'); // 尾巴
+                        break;
+
+                    case 'ball':
+                        drawCirclePixels(16, 16, 10, '#f0b440');
+                        fillRect(8, 14, 16, 4, '#e8a030');
+                        fillRect(10, 10, 12, 4, '#e8a030');
+                        fillRect(12, 8, 8, 4, '#f8c870'); // 高光
+                        fillRect(14, 6, 4, 4, '#fefefe');
+                        break;
+
+                    case 'swing':
+                        fillRect(8, 4, 2, 22, '#8b6e5e'); // 绳子
+                        fillRect(22, 4, 2, 22, '#8b6e5e');
+                        fillRect(14, 2, 4, 6, '#a08070'); // 横梁
+                        fillRect(6, 18, 20, 6, '#c89b6e'); // 座板
+                        fillRect(5, 17, 22, 3, '#b8885c');
+                        break;
+
+                    case 'bench':
+                        fillRect(4, 14, 24, 6, '#8b6f5e');
+                        fillRect(3, 13, 26, 3, '#7a5e4e');
+                        fillRect(6, 20, 4, 8, '#6b4f3e'); // 腿
+                        fillRect(22, 20, 4, 8, '#6b4f3e');
+                        fillRect(8, 16, 16, 2, '#a08070'); // 高光
+                        break;
+
+                    case 'butterfly':
+                        fillRect(10, 6, 6, 10, '#e8a0d0');
+                        fillRect(16, 6, 6, 10, '#d090c0');
+                        fillRect(6, 8, 8, 6, '#e8a0d0');
+                        fillRect(18, 8, 8, 6, '#d090c0');
+                        fillRect(14, 12, 4, 8, '#6b4f3e'); // 身体
+                        fillRect(13, 5, 6, 3, '#4a3a2e'); // 头
+                        fillRect(3, 6, 4, 4, '#e8a0d0');
+                        fillRect(25, 6, 4, 4, '#d090c0');
+                        break;
+
+                    case 'bed_home':
+                        fillRect(3, 14, 26, 12, '#d5b8e8');
+                        fillRect(2, 12, 28, 4, '#c0a0d8');
+                        fillRect(5, 8, 22, 6, '#fefefe'); // 枕头
+                        fillRect(4, 6, 24, 4, '#f8f0ff'); // 被子
+                        fillRect(1, 22, 4, 8, '#a080b0'); // 床腿
+                        fillRect(27, 22, 4, 8, '#a080b0');
+                        break;
+
+                    case 'table':
+                        fillRect(2, 10, 28, 8, '#c89b6e');
+                        fillRect(1, 9, 30, 3, '#b8885c');
+                        fillRect(5, 18, 4, 10, '#a07050');
+                        fillRect(23, 18, 4, 10, '#a07050');
+                        fillRect(8, 12, 16, 2, '#d8b890');
+                        break;
+
+                    case 'chair':
+                        fillRect(6, 6, 16, 4, '#a08060');
+                        fillRect(4, 4, 20, 4, '#8b6e50');
+                        fillRect(8, 10, 4, 16, '#8b6e50'); // 椅腿
+                        fillRect(18, 10, 4, 16, '#8b6e50');
+                        fillRect(5, 8, 18, 4, '#b09070');
+                        break;
+
+                    case 'lamp':
+                        fillRect(12, 18, 8, 6, '#c89b6e'); // 底座
+                        fillRect(11, 16, 10, 4, '#b8885c');
+                        fillRect(15, 6, 2, 12, '#a08060'); // 杆
+                        fillRect(8, 2, 16, 8, '#f0d040'); // 灯罩
+                        fillRect(7, 1, 18, 4, '#e8c030');
+                        fillRect(10, 6, 12, 3, '#fef8d0'); // 光
+                        break;
+
+                    case 'clock':
+                        drawCirclePixels(16, 14, 12, '#fefefe');
+                        drawCirclePixels(16, 14, 10, '#f8f8f8');
+                        fillRect(14, 4, 4, 4, '#3d3d3d'); // 12点
+                        fillRect(14, 20, 4, 4, '#3d3d3d'); // 6点
+                        fillRect(4, 12, 4, 4, '#3d3d3d'); // 9点
+                        fillRect(24, 12, 4, 4, '#3d3d3d'); // 3点
+                        fillRect(16, 12, 5, 3, '#3d3d3d'); // 时针
+                        fillRect(16, 8, 3, 6, '#e8536c'); // 分针
+                        fillRect(15, 13, 3, 3, '#3d3d3d'); // 中心
+                        break;
+
+                    case 'door':
+                        fillRect(5, 4, 22, 26, '#8b5e3c');
+                        fillRect(4, 3, 24, 28, '#7a4e2e');
+                        fillRect(6, 2, 20, 4, '#6b3e1e');
+                        fillRect(22, 14, 3, 4, '#f0b440'); // 把手
+                        fillRect(8, 8, 8, 14, '#a07050'); // 面板
+                        fillRect(8, 6, 8, 4, '#b8885c');
+                        break;
+
+                    case 'sofa':
+                        fillRect(4, 10, 24, 14, '#e8a060');
+                        fillRect(3, 8, 26, 5, '#d89050');
+                        fillRect(5, 6, 22, 4, '#c88040'); // 靠背
+                        fillRect(3, 20, 6, 6, '#c88040'); // 扶手
+                        fillRect(23, 20, 6, 6, '#c88040');
+                        fillRect(8, 14, 16, 4, '#f0c090'); // 坐垫高光
+                        break;
+
+                    case 'phone':
+                        fillRect(8, 4, 16, 22, '#5dade2');
+                        fillRect(7, 3, 18, 24, '#4d8ecb');
+                        fillRect(10, 6, 12, 14, '#e8f4f8'); // 屏幕
+                        fillRect(12, 8, 8, 10, '#d0e8f0');
+                        fillRect(14, 22, 4, 2, '#3d7eb0'); // 按钮
+                        fillRect(13, 20, 6, 3, '#fefefe');
+                        break;
+
+                    default:
+                        // 默认：彩色方块
+                        fillRect(4, 4, 24, 24, c);
+                        fillRect(6, 6, 20, 20, '#fefefe');
+                        fillRect(10, 10, 12, 12, c);
+                        break;
+                }
+            }
+
+            // ==================== 渲染场景导航 ====================
+            function renderSceneNav() {
+                sceneNav.innerHTML = '';
+                scenes.forEach(scene => {
+                    const tab = document.createElement('button');
+                    tab.className = 'scene-tab';
+                    if (scene.id === currentSceneId) tab.classList.add('active');
+                    tab.innerHTML = `<span class="tab-emoji">${scene.emoji}</span>${scene.name}`;
+                    tab.addEventListener('click', () => {
+                        currentSceneId = scene.id;
+                        quizTarget = null;
+                        quizOptionsList = [];
+                        isQuizLocked = false;
+                        renderAll();
+                    });
+                    sceneNav.appendChild(tab);
+                });
+            }
+
+            // ==================== 渲染学习模式 ====================
+            function renderLearnMode() {
+                cardsGrid.classList.remove('hidden');
+                quizOptionsDiv.classList.add('hidden');
+                quizOptionsDiv.innerHTML = '';
+                const scene = getCurrentScene();
+                cardsGrid.innerHTML = '';
+
+                scene.words.forEach((word, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'word-card';
+                    card.innerHTML = `
+                            <div class="pixel-icon-wrap">
+                                <canvas class="pixel-canvas" width="32" height="32"></canvas>
+                                <span class="speaker-hint">🔊</span>
+                            </div>
+                            <span class="word-label">${word.en}</span>
+                        `;
+
+                    const canvas = card.querySelector('canvas');
+                    drawPixelIcon(canvas, word.iconType, word.iconColor);
+
+                    // 点击发音
+                    card.addEventListener('click', () => {
+                        if (card.classList.contains('disabled-card')) return;
+                        speakWord(word.en);
+                        // 弹跳动画
+                        card.style.transition = 'transform 0.15s steps(3)';
+                        card.style.transform = 'scale(1.08)';
+                        setTimeout(() => {
+                            card.style.transform = '';
+                        }, 150);
+                        // 小星星
+                        spawnStar(card);
+                    });
+
+                    cardsGrid.appendChild(card);
+                });
+            }
+
+            // ==================== 渲染测验模式 ====================
+            function renderQuizMode() {
+                cardsGrid.classList.remove('hidden');
+                quizOptionsDiv.classList.remove('hidden');
+                const scene = getCurrentScene();
+                cardsGrid.innerHTML = '';
+                quizOptionsDiv.innerHTML = '';
+                isQuizLocked = false;
+
+                // 随机选一个目标单词
+                const randomIndex = Math.floor(Math.random() * scene.words.length);
+                quizTarget = scene.words[randomIndex];
+
+                // 生成4个选项（包含正确答案）
+                const options = new Set();
+                options.add(quizTarget.en);
+                const otherWords = scene.words.filter(w => w.en !== quizTarget.en);
+                // 打乱其他单词
+                const shuffledOthers = [...otherWords].sort(() => Math.random() - 0.5);
+                for (let i = 0; i < Math.min(3, shuffledOthers.length); i++) {
+                    options.add(shuffledOthers[i].en);
+                }
+                // 如果选项不足4个，从其他场景补充
+                if (options.size < 4) {
+                    const allOtherWords = scenes
+                        .flatMap(s => s.words)
+                        .filter(w => !options.has(w.en) && w.en !== quizTarget.en);
+                    const extraShuffled = [...allOtherWords].sort(() => Math.random() - 0.5);
+                    for (const w of extraShuffled) {
+                        if (options.size >= 4) break;
+                        options.add(w.en);
+                    }
+                }
+                quizOptionsList = [...options].sort(() => Math.random() - 0.5);
+
+                // 显示目标图标卡片
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                card.id = 'quizTargetCard';
+                card.innerHTML = `
+                        <div class="pixel-icon-wrap">
+                            <canvas class="pixel-canvas" width="32" height="32"></canvas>
+                        </div>
+                        <span class="word-label" style="background:#ffe8ec;border-color:#f0b0b8;">❓ 这是什么？</span>
+                    `;
+                const canvas = card.querySelector('canvas');
+                drawPixelIcon(canvas, quizTarget.iconType, quizTarget.iconColor);
+                card.addEventListener('click', () => {
+                    if (!isQuizLocked) speakWord(quizTarget.en);
+                });
+                cardsGrid.appendChild(card);
+
+                // 渲染选项按钮
+                quizOptionsList.forEach(optionWord => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quiz-option-btn';
+                    btn.textContent = optionWord;
+                    btn.addEventListener('click', () => {
+                        if (isQuizLocked) return;
+                        isQuizLocked = true;
+                        handleQuizAnswer(optionWord, btn);
+                    });
+                    quizOptionsDiv.appendChild(btn);
+                });
+            }
+
+            function handleQuizAnswer(selectedWord, clickedBtn) {
+                const isCorrect = selectedWord === quizTarget.en;
+                const allOptionBtns = quizOptionsDiv.querySelectorAll('.quiz-option-btn');
+                const targetCard = document.getElementById('quizTargetCard');
+
+                // 标记按钮
+                allOptionBtns.forEach(btn => {
+                    btn.style.pointerEvents = 'none';
+                    if (btn.textContent === quizTarget.en) {
+                        btn.classList.add('correct-pick');
+                    }
+                });
+
+                if (isCorrect) {
+                    clickedBtn.classList.add('correct-pick');
+                    if (targetCard) {
+                        targetCard.classList.add('correct-flash');
+                        targetCard.querySelector('.word-label').textContent = '✅ ' + quizTarget.en;
+                        targetCard.querySelector('.word-label').style.background = '#e8f8e0';
+                        targetCard.querySelector('.word-label').style.borderColor = '#5cb85c';
+                    }
+                    speakWord(quizTarget.en);
+                    addScore();
+                    showToast('🎉 正确！太厉害了！⭐');
+                    spawnStar(clickedBtn);
+                } else {
+                    clickedBtn.classList.add('wrong-pick');
+                    if (targetCard) {
+                        targetCard.classList.add('wrong-flash');
+                        targetCard.querySelector('.word-label').textContent = '❌ ' + quizTarget.en;
+                        targetCard.querySelector('.word-label').style.background = '#ffe8ec';
+                        targetCard.querySelector('.word-label').style.borderColor = '#e8536c';
+                    }
+                    speakWord(quizTarget.en);
+                    showToast('😊 再试试看！正确答案是 ' + quizTarget.en);
+                }
+
+                // 2秒后自动刷新题目
+                setTimeout(() => {
+                    if (currentMode === 'quiz') {
+                        renderQuizMode();
+                    }
+                }, 2000);
+            }
+
+            // ==================== 发音功能 ====================
+            function speakWord(word) {
+                if (!('speechSynthesis' in window)) return;
+                // 取消之前的发音
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.75; // 稍慢，适合小朋友
+                utterance.pitch = 1.1;
+                // 尝试选择英语语音
+                const voices = window.speechSynthesis.getVoices();
+                const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Female')) ||
+                    voices.find(v => v.lang.startsWith('en')) ||
+                    voices[0];
+                if (englishVoice) utterance.voice = englishVoice;
+                window.speechSynthesis.speak(utterance);
+            }
+
+            // 预加载语音列表
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = () => {
+                    window.speechSynthesis.getVoices();
+                };
+            }
+
+            // ==================== 小星星特效 ====================
+            function spawnStar(element) {
+                const rect = element.getBoundingClientRect();
+                const star = document.createElement('span');
+                star.className = 'star-badge';
+                star.textContent = '⭐';
+                star.style.position = 'fixed';
+                star.style.left = rect.left + rect.width / 2 - 14 + 'px';
+                star.style.top = rect.top - 10 + 'px';
+                star.style.zIndex = '200';
+                star.style.pointerEvents = 'none';
+                star.style.fontSize = '24px';
+                document.body.appendChild(star);
+                setTimeout(() => {
+                    star.style.transition = 'all 0.8s ease-out';
+                    star.style.transform = 'translateY(-60px) scale(0.3)';
+                    star.style.opacity = '0';
+                }, 50);
+                setTimeout(() => {
+                    if (star.parentNode) star.remove();
+                }, 900);
+            }
+
+            // ==================== 全局渲染 ====================
+            function renderAll() {
+                renderSceneNav();
+                if (currentMode === 'learn') {
+                    renderLearnMode();
+                } else {
+                    renderQuizMode();
+                }
+                updateScoreDisplay();
+            }
+
+            // ==================== 事件监听 ====================
+            btnLearn.addEventListener('click', () => {
+                currentMode = 'learn';
+                btnLearn.classList.add('active');
+                btnQuiz.classList.remove('active');
+                quizTarget = null;
+                quizOptionsList = [];
+                isQuizLocked = false;
+                renderAll();
+                showToast('📖 学习模式：点击卡片听发音！');
+            });
+
+            btnQuiz.addEventListener('click', () => {
+                currentMode = 'quiz';
+                btnQuiz.classList.add('active');
+                btnLearn.classList.remove('active');
+                quizTarget = null;
+                quizOptionsList = [];
+                isQuizLocked = false;
+                renderAll();
+                showToast('🎮 测验模式：看图选单词！');
+            });
+
+            btnReset.addEventListener('click', () => {
+                resetScore();
+                quizTarget = null;
+                quizOptionsList = [];
+                isQuizLocked = false;
+                if (currentMode === 'quiz') {
+                    renderQuizMode();
+                }
+            });
+
+            // ==================== 键盘快捷键 ====================
+            document.addEventListener('keydown', (e) => {
+                const sceneKeys = ['1', '2', '3', '4', '5'];
+                const idx = sceneKeys.indexOf(e.key);
+                if (idx >= 0 && idx < scenes.length && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    currentSceneId = scenes[idx].id;
+                    quizTarget = null;
+                    quizOptionsList = [];
+                    isQuizLocked = false;
+                    renderAll();
+                }
+                if (e.key === 'l' && !e.ctrlKey && !e.metaKey) {
+                    btnLearn.click();
+                }
+                if (e.key === 'q' && !e.ctrlKey && !e.metaKey) {
+                    btnQuiz.click();
+                }
+            });
+
+            // ==================== 初始化 ====================
+            function init() {
+                renderAll();
+                updateScoreDisplay();
+                // 初始欢迎提示
+                setTimeout(() => {
+                    showToast('👋 欢迎！点击卡片听单词发音 🔊');
+                }, 600);
+            }
+
+            init();
+
+            console.log('🎨 像素单词乐园已就绪！');
+            console.log('🛒 超市 | 🏥 医院 | 🏫 学校 | 🌳 公园 | 🏠 家');
+            console.log('⌨️ 快捷键: 1-5切换场景, L学习模式, Q测验模式');
+            console.log('📦 部署到 GitHub Pages 即可在线使用！');
+        })();
+    </script>
+</body>
+</html>
